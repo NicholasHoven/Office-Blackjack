@@ -37,6 +37,8 @@ class Player:
             for card in self.hand:
                 if card.rank == 1: #case Ace
                     score -= 10
+                    if score == 21:
+                        score = "BlackJack!"
                     return score
             if score > 21:
                 score = "Bust!"
@@ -55,14 +57,37 @@ class Player:
         label.place(x = (len(self.hand)*25))
         score_label = tk.Label(root, text="Score: " + str(self.score()))
         score_label.place(x=50,y=250)
-        playsound("SOUNDS/hit.mp3")
+        #playsound("SOUNDS/hit.mp3")
 
     def deal(self, deck):
         self.hit(deck)
         self.hit(deck)
 
+    def play_hand(self):
+        clear_menu()
+        self.hand.clear()
 
+        root.title("BlackJack!")
+        root.geometry("500x500")
+        root.configure(bg="#007A33")
+        deck = create_deck()
+        self.deal(deck)
+        play_button = tk.Button(text="Play", command=lambda: self.play_hand())
+        play_button.place(x=100,y=200)
+        hit_button = tk.Button(text = "Hit", command=lambda: self.hit(deck))
+        hit_button.place(x = 200, y = 200)
+        stay_button = tk.Button(text = "Stay")
+        stay_button.place(x=250, y = 200)
+        choice = "" #this is used to represent the players choice for hit or stay
+        #while (player.score() != "BlackJack!") and (player.score() != "Bust!") and (choice != "s"):
         
+            
+
+
+
+    
+        
+ 
 def create_deck() -> list[Card]: #if you have a class called card.
     suits = ["c","d","h","s"]
     deck = []
@@ -79,17 +104,14 @@ def clear_menu(): #this will completely clear the GUI menu
   
 def display_main_menu():
     clear_menu()
-    root.title("My Basic GUI")
-    root.geometry("1000x500")
+    root.title("BlackJack!")
+    root.geometry("500x500")
     root.configure(bg="#007A33")
-    deck = create_deck()
-
     nick = Player()
+    play_button = tk.Button(text = "Play!", command=lambda:nick.play_hand())
+    play_button.place(x=250,y=250)
+   
 
-    hit_button = tk.Button(text="Hit", command=lambda: nick.hit(deck))
-    hit_button.place(x = 400, y = 400)
-    length_button = tk.Button(text="Length", command=lambda: print(len(deck)))
-    length_button.place(x = 50, y = 200)
 
 
 def run_gui():
