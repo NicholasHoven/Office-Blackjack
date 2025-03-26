@@ -24,20 +24,19 @@ class Card:
 
     def name(self):
         name = str(self.rank) + str(self.suit) + ".gif"
-        print(name)
         return name
 
 class Player:
     def __init__(self):
         self.hand = []
         self.dealer_hand = []
-        self.score_label = None  # Initialize score_label as None
+        self.score_label = None
         self.back_label = None
+        self.dealer_score_label = None
+        self.outcome_label = None
 
     def score(self, given_hand):
         score = 0
-        if self.score_label:
-            self.score_label.config(text="")
         for card in given_hand:
             if card.rank == 1:
                 score += 11
@@ -60,23 +59,23 @@ class Player:
                 return "Bust!"
         else:
             return score
-        
 
     def hit(self, deck, sound):
-        i = random.randint(0, len(deck) - 1)
-        self.hand.append(deck[i])
-        deck.pop(i)
-        img = tk.PhotoImage(file="DECK/" + self.hand[-1].name())
-        label = tk.Label(root, image=img)
-        label.image = img
-        label.place(x=(len(self.hand) * 25), y=250)
-        self.score_label.config(text="Score: " + str(self.score(self.hand)))
+        if self.score(self.hand) != "Bust!" and self.score(self.hand) != "BlackJack!":
+            i = random.randint(0, len(deck) - 1)
+            self.hand.append(deck[i])
+            deck.pop(i)
+            img = tk.PhotoImage(file="DECK/" + self.hand[-1].name())
+            label = tk.Label(root, image=img)
+            label.image = img
+            label.place(x=(len(self.hand) * 25), y=250)
+            self.score_label.config(text="Score: " + str(self.score(self.hand)))
+            if sound:
+                play_sound("SOUNDS/hit.mp3")
+            if self.score(self.hand) == "Bust!":
+                time.sleep(.2)
+                play_sound("SOUNDS/lose_horn.mp3")
 
-        if sound:
-            play_sound("SOUNDS/hit.mp3")
-        else:
-            pass
-        
     def init_dealer(self, deck):
         i = random.randint(0, len(deck) - 1)
         self.dealer_hand.append(deck[i])
@@ -84,44 +83,29 @@ class Player:
         img = tk.PhotoImage(file="DECK/" + self.dealer_hand[-1].name())
         label = tk.Label(root, image=img)
         label.image = img
-        label.place(x = 25, y = 25)
+        label.place(x=25, y=25)
         img_back = tk.PhotoImage(file="DECK/b.gif")
-        self.back_label= tk.Label(root, image=img_back)
+        self.back_label = tk.Label(root, image=img_back)
         self.back_label.image = img_back
-        self.back_label.place(x = 50, y = 24)
+        self.back_label.place(x=50, y=24)
+        self.dealer_score_label.config(text="Score: " + str(self.score(self.dealer_hand)))
 
-    
     def should_dealer_hit(self):
         if self.score(self.dealer_hand) == "BlackJack!":
             return False
         if self.score(self.dealer_hand) == "Bust!":
             return False
-        if int(self.score(self.dealer_hand)) < 17:
+        if isinstance(self.score(self.dealer_hand), int) and self.score(self.dealer_hand) < 17:
             return True
         return False
-    
-    '''
-    def dealer_play(self, deck):
+
+    def dealer_play(self, deck, root):
         while self.should_dealer_hit():
             time.sleep(.5)
             play_sound("SOUNDS/hit.mp3")
-            self.back_label.destroy()
-            i = random.randint(0, len(deck) - 1)
-            self.dealer_hand.append(deck[i])
-            deck.pop(i)
-            img = tk.PhotoImage(file="DECK/" + self.dealer_hand[-1].name())
-            label = tk.Label(root, image=img)
-            label.image = img
-            label.place(x = (len(self.dealer_hand)) * 25, y = 25)"
-     '''
-    
-    def dealer_play(self, deck, root):  # Pass root as an argument
-        while self.should_dealer_hit():
-            time.sleep(.5)
-            play_sound("SOUNDS/hit.mp3")  # Assuming play_sound is defined elsewhere
-            if hasattr(self, 'back_label') and self.back_label: #check if back_label exists
+            if hasattr(self, 'back_label') and self.back_label:
                 self.back_label.destroy()
-                self.back_label = None #prevent multiple destroys.
+                self.back_label = None
 
             i = random.randint(0, len(deck) - 1)
             self.dealer_hand.append(deck[i])
@@ -130,10 +114,9 @@ class Player:
             label = tk.Label(root, image=img)
             label.image = img
             label.place(x=(len(self.dealer_hand)) * 25, y=25)
-            root.update()  # Force the GUI to update
-            
-                
-            
+            self.dealer_score_label.config(text="Score: " + str(self.score(self.dealer_hand)))
+            root.update()
+
     def deal(self, deck):
         self.hit(deck, False)
         self.hit(deck, False)
@@ -143,15 +126,16 @@ class Player:
         clear_menu()
         self.hand.clear()
         self.dealer_hand.clear()
-        self.score_label = tk.Label(root, text="Score: ") #create label here
+        self.score_label = tk.Label(root, text="Score: " + str(self.score(self.hand))) #create label here and set player score.
         self.score_label.place(x=200, y=400)
+        self.dealer_score_label = tk.Label(root, text="Score: " + str(self.score(self.dealer_hand)))
+        self.dealer_score_label.place(x=200, y=200)
 
         root.title("BlackJack!")
         root.geometry("500x500")
         root.configure(bg="#007A33")
         deck = create_deck()
 
-        
         self.deal(deck)
         self.init_dealer(deck)
         play_button = tk.Button(text="Play", command=lambda: self.play_hand())
