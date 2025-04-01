@@ -35,6 +35,9 @@ class Player:
         self.dealer_score_label = None
         self.outcome_label = None
         self.balance = 500
+        self.balance_label = None
+        self.bet = 50
+        self.wager_textbox = None
 
     def score(self, given_hand):
         score = 0
@@ -85,30 +88,42 @@ class Player:
             return True
         return False
     
+    
     def determine_winner(self):
         if self.score(self.hand) == "Bust!":
-            time.sleep(.3)
-            play_sound("SOUNDS/dealer_win.mp3")
-            return "Dealer Wins!"
-        elif self.score(self.dealer_hand) == "Bust!":
-            time.sleep(.3)
-            play_sound("SOUNDS/win_sound.mp3")
-            return "You Win!"
-        elif self.score(self.dealer_hand) == "BlackJack!" and self.score(self.hand) != "BlackJack!":
+            self.balance -= self.bet
+            self.balance_label.config(text = "Balance: $" + str(self.balance))
+            root.update()
             time.sleep(.3)
             play_sound("SOUNDS/dealer_win.mp3")
             return "Dealer Wins!"
         elif self.score(self.hand) == "BlackJack!" and self.score(self.dealer_hand) != "BlackJack!":
+            self.balance += (1.5 * self.bet)
+            self.balance_label.config(text = "Balance: $" + str(self.balance))
+            root.update()
+            time.sleep(.3)
+            play_sound("SOUNDS/win_sound.mp3")
+            return "You Win!"
+        elif self.score(self.dealer_hand) == "Bust!":
+            self.balance += self.bet
+            self.balance_label.config(text = "Balance: $" + str(self.balance))
+            root.update()
             time.sleep(.3)
             play_sound("SOUNDS/win_sound.mp3")
             return "You Win!"
         elif self.score(self.hand) == self.score(self.dealer_hand):
             return "Push!"
         elif int(self.score(self.hand)) < int(self.score(self.dealer_hand)):
+            self.balance -= self.bet
+            self.balance_label.config(text = "Balance: $" + str(self.balance))
+            root.update()
             time.sleep(.3)
             play_sound("SOUNDS/dealer_win.mp3")
             return "Dealer Wins!"
         elif int(self.score(self.hand)) > int(self.score(self.dealer_hand)):
+            self.balance += self.bet
+            self.balance_label.config(text = "Balance: $" + str(self.balance))
+            root.update()
             time.sleep(.3)
             play_sound("SOUNDS/win_sound.mp3")
             return "You Win!"
@@ -176,6 +191,9 @@ class Player:
         self.score_label.place(x=200, y=400)
         self.dealer_score_label = tk.Label(root, text="Score: " + str(self.score(self.dealer_hand)))
         self.dealer_score_label.place(x=50, y=200)
+        self.wager_textbox = tk.Entry(root, width=5)
+        self.wager_textbox.place(x = 225, y = 450)
+        
         
 
         root.title("BlackJack!")
@@ -192,10 +210,8 @@ class Player:
         hit_button.place(x=100, y=400)
         stay_button = tk.Button(text="Stay", command=lambda: self.dealer_play(deck, root))
         stay_button.place(x=150, y=400)
-        balance_label = tk.Label(text = "Balance: $" + str(self.balance))
-        balance_label.place(x = 75, y = 450)
-        wager_label = tk.Label(text = "Wager:")
-        wager_label.place(x = 175, y = 450)
+        self.balance_label = tk.Label(text = "Balance: $" + str(self.balance))
+        self.balance_label.place(x = 75, y = 450)
         wager_textbox = tk.Entry(root, width=5)
         wager_textbox.place(x = 225, y = 450)
 
