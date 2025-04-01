@@ -134,7 +134,7 @@ class Player:
         self.outcome_label = tk.Label(text=self.determine_winner())
         self.outcome_label.place(x=150, y = 200)
 
-    def hit(self, deck, sound):
+    def hit(self, deck, sound, on_deal):
         if self.score(self.hand) != "Bust!" and self.score(self.hand) != "BlackJack!":
             i = random.randint(0, len(deck) - 1)
             self.hand.append(deck[i])
@@ -147,20 +147,23 @@ class Player:
             if sound:
                 play_sound("SOUNDS/hit.mp3")
             if self.score(self.hand) == "Bust!":
-                time.sleep(.2)
-                play_sound("SOUNDS/lose_horn.mp3")  
-            '''
-            if self.score(self.hand) == "BlackJack!":
-                time.sleep(.4)
-                self.dealer_play(deck, root)'
-            '''
+                self.outcome_label = tk.Label(text=self.determine_winner())
+                self.outcome_label.place(x=150, y = 200)
+                #time.sleep(.2)
+                #play_sound("SOUNDS/lose_horn.mp3")  
+            if on_deal == False and self.score(self.hand) == "BlackJack!":
+                time.sleep(1)
+                self.dealer_play(deck, root)
+                self.outcome_label = tk.Label(text=self.determine_winner())
+                self.outcome_label.place(x=150, y = 200)
                 
 
     def deal(self, deck):
-        self.hit(deck, False)
-        self.hit(deck, False)
+        self.hit(deck, False, True)
+        self.hit(deck, False, True)
         play_sound("SOUNDS/hit.mp3")
 
+    
     def play_hand(self):
         clear_menu()
         self.hand.clear()
@@ -177,10 +180,16 @@ class Player:
         deck = create_deck()
 
         self.deal(deck)
-        self.init_dealer(deck)
+        if self.score(self.hand) == "BlackJack!":
+            self.init_dealer(deck)
+            self.dealer_play(deck, root)
+            self.outcome_label = tk.Label(text=self.determine_winner())
+            self.outcome_label.place(x=150, y = 200)
+        else:
+            self.init_dealer(deck)
         play_button = tk.Button(text="Play", command=lambda: self.play_hand())
         play_button.place(x=50, y=400)
-        hit_button = tk.Button(text="Hit", command=lambda: self.hit(deck, True))
+        hit_button = tk.Button(text="Hit", command=lambda: self.hit(deck, True, False))
         hit_button.place(x=100, y=400)
         stay_button = tk.Button(text="Stay", command=lambda: self.dealer_play(deck, root))
         stay_button.place(x=150, y=400)
