@@ -182,38 +182,39 @@ class Player:
         play_sound("SOUNDS/hit.mp3")
 
     
-    def play_hand(self):
-        clear_menu()
-        self.hand.clear()
-        self.dealer_hand.clear()
-        self.outcome_label = "undetermined"
-        self.score_label = tk.Label(root, text="Score: " + str(self.score(self.hand))) #create label here and set player score.
-        self.score_label.place(x=200, y=400)
-        self.dealer_score_label = tk.Label(root, text="Score: " + str(self.score(self.dealer_hand)))
-        self.dealer_score_label.place(x=50, y=200)
-        self.wager_textbox = tk.Entry(root, width=5)
-        self.wager_textbox.place(x = 225, y = 450)
-        
-        
+    def play_hand(self, wager):
+        if wager != "":
+            clear_menu()
+            self.hand.clear()
+            self.dealer_hand.clear()
+            self.outcome_label = "undetermined"
+            self.bet = int(wager)
+            print("BET: "+ str(self.bet))
+            self.score_label = tk.Label(root, text="Score: " + str(self.score(self.hand))) #create label here and set player score.
+            self.score_label.place(x=200, y=400)
+            self.dealer_score_label = tk.Label(root, text="Score: " + str(self.score(self.dealer_hand)))
+            self.dealer_score_label.place(x=50, y=200)
+            self.wager_textbox = tk.Entry(root, width=5)
+            self.wager_textbox.place(x = 225, y = 450)
+            
+            root.title("BlackJack!")
+            root.geometry("500x500")
+            root.configure(bg="#007A33")
+            deck = create_deck()
 
-        root.title("BlackJack!")
-        root.geometry("500x500")
-        root.configure(bg="#007A33")
-        deck = create_deck()
+            self.deal(deck)
+            self.init_dealer(deck)
 
-        self.deal(deck)
-        self.init_dealer(deck)
-
-        play_button = tk.Button(text="Play", command=lambda: self.play_hand())
-        play_button.place(x=50, y=400)
-        hit_button = tk.Button(text="Hit", command=lambda: self.hit(deck, True, False))
-        hit_button.place(x=100, y=400)
-        stay_button = tk.Button(text="Stay", command=lambda: self.dealer_play(deck, root))
-        stay_button.place(x=150, y=400)
-        self.balance_label = tk.Label(text = "Balance: $" + str(self.balance))
-        self.balance_label.place(x = 75, y = 450)
-        wager_textbox = tk.Entry(root, width=5)
-        wager_textbox.place(x = 225, y = 450)
+            play_button = tk.Button(text="Play", command=lambda: self.play_hand(wager_textbox.get()))
+            play_button.place(x=50, y=400)
+            hit_button = tk.Button(text="Hit", command=lambda: self.hit(deck, True, False))
+            hit_button.place(x=100, y=400)
+            stay_button = tk.Button(text="Stay", command=lambda: self.dealer_play(deck, root))
+            stay_button.place(x=150, y=400)
+            self.balance_label = tk.Label(text = "Balance: $" + str(self.balance))
+            self.balance_label.place(x = 75, y = 450)
+            wager_textbox = tk.Entry(root, width=5)
+            wager_textbox.place(x = 225, y = 450)
 
 def create_deck():
     suits = ["c", "d", "h", "s"]
@@ -233,7 +234,7 @@ def display_main_menu():
     root.geometry("500x500")
     root.configure(bg="#007A33")
     nick = Player()
-    play_button = tk.Button(text="Play!", command=lambda: nick.play_hand())
+    play_button = tk.Button(text="Play!", command=lambda: nick.play_hand(50))
     play_button.place(x=250, y=250)
 
 def run_gui():
