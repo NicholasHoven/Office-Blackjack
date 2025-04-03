@@ -104,6 +104,13 @@ class Player:
             time.sleep(.3)
             play_sound("SOUNDS/win_sound.mp3")
             return "You Win!"
+        elif self.score(self.dealer_hand) == "BlackJack!" and self.score(self.hand) != "BlackJack!":
+            self.balance -= self.bet
+            self.balance_label.config(text = "Balance: $" + str(self.balance))
+            root.update()
+            time.sleep(.3)
+            play_sound("SOUNDS/dealer_win.mp3")
+            return "Dealer Wins!"
         elif self.score(self.dealer_hand) == "Bust!":
             self.balance += self.bet
             self.balance_label.config(text = "Balance: $" + str(self.balance))
@@ -236,7 +243,13 @@ def display_main_menu():
     nick = Player()
     play_button = tk.Button(text="Play!", command=lambda: nick.play_hand(50))
     play_button.place(x=250, y=250)
+    img = tk.PhotoImage(file="CURRENCY/1.png")
+    label = tk.Label(root, image=img)
+    label.image = img
+    label.place(x=5)
 
 def run_gui():
     display_main_menu()
     root.mainloop()
+
+run_gui()
