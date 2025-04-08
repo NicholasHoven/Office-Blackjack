@@ -1,11 +1,14 @@
 import tkinter as tk
+from tkinter import *
 import random
 import pygame
 import os
 import time
 
+
 root = tk.Tk()
 pygame.mixer.init()
+green = "#007A33" #casino colors
 
 def play_sound(sound_file):
     try:
@@ -33,10 +36,11 @@ class Player:
         self.score_label = None
         self.back_label = None
         self.dealer_score_label = None
+        self.outcome = "unknown"
         self.outcome_label = None
         self.balance = 500
         self.balance_label = None
-        self.bet = 50
+        self.bet = -1
         self.wager_textbox = None
 
     def score(self, given_hand):
@@ -96,6 +100,7 @@ class Player:
             root.update()
             time.sleep(.3)
             play_sound("SOUNDS/dealer_win.mp3")
+            self.outcome = "Dealer Wins!"
             return "Dealer Wins!"
         elif self.score(self.hand) == "BlackJack!" and self.score(self.dealer_hand) != "BlackJack!":
             self.balance += (1.5 * self.bet)
@@ -103,6 +108,7 @@ class Player:
             root.update()
             time.sleep(.3)
             play_sound("SOUNDS/win_sound.mp3")
+            self.outcome = "You Win!"
             return "You Win!"
         elif self.score(self.dealer_hand) == "BlackJack!" and self.score(self.hand) != "BlackJack!":
             self.balance -= self.bet
@@ -110,6 +116,7 @@ class Player:
             root.update()
             time.sleep(.3)
             play_sound("SOUNDS/dealer_win.mp3")
+            self.outcome = "Dealer Wins!"
             return "Dealer Wins!"
         elif self.score(self.dealer_hand) == "Bust!":
             self.balance += self.bet
@@ -117,8 +124,10 @@ class Player:
             root.update()
             time.sleep(.3)
             play_sound("SOUNDS/win_sound.mp3")
+            self.outcome = "You Win!"
             return "You Win!"
         elif self.score(self.hand) == self.score(self.dealer_hand):
+            self.outcome = "Push!"
             return "Push!"
         elif int(self.score(self.hand)) < int(self.score(self.dealer_hand)):
             self.balance -= self.bet
@@ -126,6 +135,7 @@ class Player:
             root.update()
             time.sleep(.3)
             play_sound("SOUNDS/dealer_win.mp3")
+            self.outcome = "Dealer Wins!"
             return "Dealer Wins!"
         elif int(self.score(self.hand)) > int(self.score(self.dealer_hand)):
             self.balance += self.bet
@@ -133,6 +143,7 @@ class Player:
             root.update()
             time.sleep(.3)
             play_sound("SOUNDS/win_sound.mp3")
+            self.outcome = "You Win!"
             return "You Win!"
 
 
@@ -158,29 +169,30 @@ class Player:
             self.outcome_label.place(x=150, y = 200)
 
     def hit(self, deck, sound, on_deal):
-        if self.score(self.hand) != "Bust!" and self.score(self.hand) != "BlackJack!":
-            i = random.randint(0, len(deck) - 1)
-            self.hand.append(deck[i])
-            deck.pop(i)
-            img = tk.PhotoImage(file="DECK/" + self.hand[-1].name())
-            label = tk.Label(root, image=img)
-            label.image = img
-            label.place(x=(len(self.hand) * 25), y=250)
-            self.score_label.config(text="Score: " + str(self.score(self.hand)))
-            if sound:
-                play_sound("SOUNDS/hit.mp3")
-            if self.score(self.hand) == "Bust!":
-                self.outcome_label = tk.Label(text=self.determine_winner())
-                self.outcome_label.place(x=150, y = 200)
-                #time.sleep(.2)
-                #play_sound("SOUNDS/lose_horn.mp3")  
-            '''
-            if on_deal == False and self.score(self.hand) == "BlackJack!":
-                time.sleep(1)
-                self.dealer_play(deck, root)
-                self.outcome_label = tk.Label(text=self.determine_winner())
-                self.outcome_label.place(x=150, y = 200)'
-            '''
+        if self.outcome == "unknown":
+            if self.score(self.hand) != "Bust!" and self.score(self.hand) != "BlackJack!":
+                i = random.randint(0, len(deck) - 1)
+                self.hand.append(deck[i])
+                deck.pop(i)
+                img = tk.PhotoImage(file="DECK/" + self.hand[-1].name())
+                label = tk.Label(root, image=img)
+                label.image = img
+                label.place(x=(len(self.hand) * 25), y=250)
+                self.score_label.config(text="Score: " + str(self.score(self.hand)))
+                if sound:
+                    play_sound("SOUNDS/hit.mp3")
+                if self.score(self.hand) == "Bust!":
+                    self.outcome_label = tk.Label(text=self.determine_winner())
+                    self.outcome_label.place(x=150, y = 200)
+                    #time.sleep(.2)
+                    #play_sound("SOUNDS/lose_horn.mp3")  
+                '''
+                if on_deal == False and self.score(self.hand) == "BlackJack!":
+                    time.sleep(1)
+                    self.dealer_play(deck, root)
+                    self.outcome_label = tk.Label(text=self.determine_winner())
+                    self.outcome_label.place(x=150, y = 200)'
+                '''
                 
 
     def deal(self, deck):
@@ -188,10 +200,35 @@ class Player:
         self.hit(deck, False, True)
         play_sound("SOUNDS/hit.mp3")
 
+    def place_bets(self):
+        one_img_v = tk.PhotoImage(file="CURRENCY/1v.png")
+        one_button = tk.Button(root, image=one_img_v, borderwidth=0)
+        one_button.image = one_img_v
+        one_button.place(x = 400, y = 300)
+
+
+
     
     def play_hand(self, wager):
-        if wager != "":
+        green = "#007A33" #casino green color
+        if wager == -1: #initial case
             clear_menu()
+            self.outcome = "unknown"
+            self.place_bets()
+            play_button = tk.Button(text="Play", command=lambda: self.play_hand(wager_textbox.get()))
+            play_button.place(x=25, y=450)
+            hit_button = tk.Button(text="Hit", command=lambda: self.hit(deck, True, False))
+            hit_button.place(x=75, y=450)
+            stay_button = tk.Button(text="Stay", command=lambda: self.dealer_play(deck, root))
+            stay_button.place(x=125, y=450)
+            self.balance_label = tk.Label(text = "Balance: $" + str(self.balance))
+            self.balance_label.place(x = 180, y = 450)
+            wager_textbox = tk.Entry(root, width=5)
+            wager_textbox.place(x = 250, y = 450)
+        elif wager != "":
+            clear_menu()
+            self.outcome = "unknown"
+            self.place_bets()
             self.hand.clear()
             self.dealer_hand.clear()
             self.outcome_label = "undetermined"
@@ -205,7 +242,7 @@ class Player:
             self.wager_textbox.place(x = 225, y = 450)
             
             root.title("BlackJack!")
-            root.geometry("500x500")
+            root.geometry("600x500")
             root.configure(bg="#007A33")
             deck = create_deck()
 
@@ -238,15 +275,20 @@ def clear_menu():
 def display_main_menu():
     clear_menu()
     root.title("BlackJack!")
-    root.geometry("500x500")
+    root.geometry("600x500")
     root.configure(bg="#007A33")
     nick = Player()
-    play_button = tk.Button(text="Play!", command=lambda: nick.play_hand(50))
+    play_button = tk.Button(text="Play!", command=lambda: nick.play_hand(nick.bet))
     play_button.place(x=250, y=250)
-    img = tk.PhotoImage(file="CURRENCY/1.png")
+    img = tk.PhotoImage(file="CURRENCY/10h.png")
     label = tk.Label(root, image=img)
     label.image = img
     label.place(x=5)
+    img = tk.PhotoImage(file="CURRENCY/1h.png")
+    label = tk.Label(root, image=img)
+    label.image = img
+    label.place(x=5, y = 200)
+    
 
 def run_gui():
     display_main_menu()
