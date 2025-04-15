@@ -40,8 +40,10 @@ class Player:
         self.outcome_label = None
         self.balance = 500
         self.balance_label = None
-        self.bet = -1
+        self.bet = 0
         self.wager_textbox = None
+        self.wager_label = None
+        self.first_run = True
 
     def score(self, given_hand):
         score = 0
@@ -99,8 +101,12 @@ class Player:
             self.balance_label.config(text = "Balance: $" + str(self.balance))
             root.update()
             time.sleep(.3)
-            play_sound("SOUNDS/dealer_win.mp3")
-            self.outcome = "Dealer Wins!"
+            if self.balance == 0:
+                play_sound("SOUNDS/lose_horn.mp3")
+                return "The House Always Wins!"
+            else:
+                play_sound("SOUNDS/dealer_win.mp3")
+                self.outcome = "Dealer Wins!"
             return "Dealer Wins!"
         elif self.score(self.hand) == "BlackJack!" and self.score(self.dealer_hand) != "BlackJack!":
             self.balance += (1.5 * self.bet)
@@ -115,8 +121,12 @@ class Player:
             self.balance_label.config(text = "Balance: $" + str(self.balance))
             root.update()
             time.sleep(.3)
-            play_sound("SOUNDS/dealer_win.mp3")
-            self.outcome = "Dealer Wins!"
+            if self.balance == 0:
+                play_sound("SOUNDS/lose_horn.mp3")
+                return "The House Always Wins!"
+            else:
+                play_sound("SOUNDS/dealer_win.mp3")
+                self.outcome = "Dealer Wins!"
             return "Dealer Wins!"
         elif self.score(self.dealer_hand) == "Bust!":
             self.balance += self.bet
@@ -134,8 +144,12 @@ class Player:
             self.balance_label.config(text = "Balance: $" + str(self.balance))
             root.update()
             time.sleep(.3)
-            play_sound("SOUNDS/dealer_win.mp3")
-            self.outcome = "Dealer Wins!"
+            if self.balance == 0:
+                play_sound("SOUNDS/lose_horn.mp3")
+                return "The House Always Wins!"
+            else:
+                play_sound("SOUNDS/dealer_win.mp3")
+                self.outcome = "Dealer Wins!"
             return "Dealer Wins!"
         elif int(self.score(self.hand)) > int(self.score(self.dealer_hand)):
             self.balance += self.bet
@@ -166,7 +180,9 @@ class Player:
                 self.dealer_score_label.config(text="Score: " + str(self.score(self.dealer_hand)))
                 root.update()
             self.outcome_label = tk.Label(text=self.determine_winner())
-            self.outcome_label.place(x=150, y = 200)
+            self.outcome_label.place(x=245, y = 200)
+        self.bet = 0
+        self.wager_label.config(text = "Bet: $" + str(self.bet))
 
     def hit(self, deck, sound, on_deal):
         if self.outcome == "unknown":
@@ -183,7 +199,9 @@ class Player:
                     play_sound("SOUNDS/hit.mp3")
                 if self.score(self.hand) == "Bust!":
                     self.outcome_label = tk.Label(text=self.determine_winner())
-                    self.outcome_label.place(x=150, y = 200)
+                    self.outcome_label.place(x=245, y = 200)
+                    self.bet = 0
+                    self.wager_label.config(text = "Bet: $" + str(self.bet))
                     #time.sleep(.2)
                     #play_sound("SOUNDS/lose_horn.mp3")  
                 '''
@@ -200,22 +218,43 @@ class Player:
         self.hit(deck, False, True)
         play_sound("SOUNDS/hit.mp3")
 
+    def increase_bet(self, amount):
+        if (self.bet + amount) <= self.balance:
+            self.bet += amount
+            self.wager_label.config(text = "Bet: $" + str(self.bet))
+
     def place_bets(self):
-        one_img_v = tk.PhotoImage(file="CURRENCY/1v.png")
-        one_button = tk.Button(root, image=one_img_v, borderwidth=0)
+        self.wager_label = tk.Label(text = "Bet: $" + str(self.bet))
+        self.wager_label.place(x = 180, y = 425)
+        one_img_v = tk.PhotoImage(file="CURRENCY/100_135v.png")
+        one_button = tk.Button(root, image=one_img_v, borderwidth=0, command=lambda: self.increase_bet(100))
         one_button.image = one_img_v
-        one_button.place(x = 400, y = 300)
+        one_button.place(x = 280, y = 350)
+        one_img_v = tk.PhotoImage(file="CURRENCY/50_135v.png")
+        one_button = tk.Button(root, image=one_img_v, borderwidth=0, command=lambda: self.increase_bet(50))
+        one_button.image = one_img_v
+        one_button.place(x = 350, y = 350)
+        one_img_v = tk.PhotoImage(file="CURRENCY/20_135v.png")
+        one_button = tk.Button(root, image=one_img_v, borderwidth=0, command=lambda: self.increase_bet(20))
+        one_button.image = one_img_v
+        one_button.place(x = 420, y = 350)
+        one_img_v = tk.PhotoImage(file="CURRENCY/10_135v.png")
+        one_button = tk.Button(root, image=one_img_v, borderwidth=0, command=lambda: self.increase_bet(10))
+        one_button.image = one_img_v
+        one_button.place(x = 490, y = 350)
+
 
 
 
     
     def play_hand(self, wager):
         green = "#007A33" #casino green color
-        if wager == -1: #initial case
+        if self.first_run == True: #initial case
+            self.first_run = False
             clear_menu()
             self.outcome = "unknown"
             self.place_bets()
-            play_button = tk.Button(text="Play", command=lambda: self.play_hand(wager_textbox.get()))
+            play_button = tk.Button(text="Play", command=lambda: self.play_hand(self.bet))
             play_button.place(x=25, y=450)
             hit_button = tk.Button(text="Hit", command=lambda: self.hit(deck, True, False))
             hit_button.place(x=75, y=450)
@@ -223,9 +262,9 @@ class Player:
             stay_button.place(x=125, y=450)
             self.balance_label = tk.Label(text = "Balance: $" + str(self.balance))
             self.balance_label.place(x = 180, y = 450)
-            wager_textbox = tk.Entry(root, width=5)
-            wager_textbox.place(x = 250, y = 450)
-        elif wager != "":
+            #wager_textbox = tk.Entry(root, width=5)
+            #wager_textbox.place(x = 250, y = 450)
+        elif wager != 0:
             clear_menu()
             self.outcome = "unknown"
             self.place_bets()
@@ -238,8 +277,8 @@ class Player:
             self.score_label.place(x=50, y=360)
             self.dealer_score_label = tk.Label(root, text="Score: " + str(self.score(self.dealer_hand)))
             self.dealer_score_label.place(x=50, y=135)
-            self.wager_textbox = tk.Entry(root, width=5)
-            self.wager_textbox.place(x = 225, y = 450)
+            #self.wager_textbox = tk.Entry(root, width=5)
+            #self.wager_textbox.place(x = 225, y = 450)
             
             root.title("BlackJack!")
             root.geometry("600x500")
@@ -249,7 +288,7 @@ class Player:
             self.deal(deck)
             self.init_dealer(deck)
 
-            play_button = tk.Button(text="Play", command=lambda: self.play_hand(wager_textbox.get()))
+            play_button = tk.Button(text="Play", command=lambda: self.play_hand(self.bet))
             play_button.place(x=25, y=450)
             hit_button = tk.Button(text="Hit", command=lambda: self.hit(deck, True, False))
             hit_button.place(x=75, y=450)
@@ -257,8 +296,8 @@ class Player:
             stay_button.place(x=125, y=450)
             self.balance_label = tk.Label(text = "Balance: $" + str(self.balance))
             self.balance_label.place(x = 180, y = 450)
-            wager_textbox = tk.Entry(root, width=5)
-            wager_textbox.place(x = 250, y = 450)
+            #wager_textbox = tk.Entry(root, width=5)
+            #wager_textbox.place(x = 250, y = 450)
 
 def create_deck():
     suits = ["c", "d", "h", "s"]
@@ -280,14 +319,6 @@ def display_main_menu():
     nick = Player()
     play_button = tk.Button(text="Play!", command=lambda: nick.play_hand(nick.bet))
     play_button.place(x=250, y=250)
-    img = tk.PhotoImage(file="CURRENCY/10h.png")
-    label = tk.Label(root, image=img)
-    label.image = img
-    label.place(x=5)
-    img = tk.PhotoImage(file="CURRENCY/1h.png")
-    label = tk.Label(root, image=img)
-    label.image = img
-    label.place(x=5, y = 200)
     
 
 def run_gui():
