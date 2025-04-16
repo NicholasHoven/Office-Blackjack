@@ -235,7 +235,10 @@ class Player:
         play_sound("SOUNDS/hit.mp3")
 
     def increase_bet(self, amount):
-        if ((self.bet + amount) <= self.balance) and (self.can_bet == True):
+        if (amount == -1) and (self.can_bet == True):
+            self.bet = 0
+            self.wager_label.config(text = "Bet: $" + str(self.bet))
+        elif ((self.bet + amount) <= self.balance) and (self.can_bet == True):
             play_sound("SOUNDS/money_click.mp3")
             self.bet += amount
             self.wager_label.config(text = "Bet: $" + str(self.bet))
@@ -259,6 +262,8 @@ class Player:
         one_button = tk.Button(root, image=one_img_v, borderwidth=0, command=lambda: self.increase_bet(10))
         one_button.image = one_img_v
         one_button.place(x = 490, y = 350)
+        clear_bet_button = tk.Button(root, text="Clear", command=lambda: self.increase_bet(-1))
+        clear_bet_button.place(x=180, y = 470)
 
 
     def play_hand(self, wager):
