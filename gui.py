@@ -5,10 +5,11 @@ import pygame
 import os
 import time
 
-
 root = tk.Tk()
 pygame.mixer.init()
 green = "#007A33" #casino colors
+
+    
 
 def play_sound(sound_file):
     try:
@@ -94,6 +95,22 @@ class Player:
             return True
         return False
     
+    def play_again(self):
+        self.hand = []
+        self.dealer_hand = []
+        self.score_label = None
+        self.back_label = None
+        self.dealer_score_label = None
+        self.outcome = "unknown"
+        self.outcome_label = None
+        self.balance = 500
+        self.balance_label = None
+        self.bet = 0
+        self.wager_textbox = None
+        self.wager_label = None
+        self.first_run = True
+        self.play_hand(self.bet)
+    
     
     def determine_winner(self):
         if self.score(self.hand) == "Bust!":
@@ -103,6 +120,8 @@ class Player:
             time.sleep(.3)
             if self.balance == 0:
                 play_sound("SOUNDS/lose_horn.mp3")
+                play_again_button = tk.Button(text = "Play Again?", command=lambda: self.play_again())
+                play_again_button.place(x=500, y = 200)
                 return "The House Always Wins!"
             else:
                 play_sound("SOUNDS/dealer_win.mp3")
@@ -123,6 +142,8 @@ class Player:
             time.sleep(.3)
             if self.balance == 0:
                 play_sound("SOUNDS/lose_horn.mp3")
+                play_again_button = tk.Button(text = "Play Again?", command=lambda: self.play_again())
+                play_again_button.place(x=500, y = 200)
                 return "The House Always Wins!"
             else:
                 play_sound("SOUNDS/dealer_win.mp3")
@@ -146,6 +167,8 @@ class Player:
             time.sleep(.3)
             if self.balance == 0:
                 play_sound("SOUNDS/lose_horn.mp3")
+                play_again_button = tk.Button(text = "Play Again?", command=lambda: self.play_again())
+                play_again_button.place(x=500, y = 200)
                 return "The House Always Wins!"
             else:
                 play_sound("SOUNDS/dealer_win.mp3")
@@ -169,7 +192,6 @@ class Player:
                 if hasattr(self, 'back_label') and self.back_label:
                     self.back_label.destroy()
                     self.back_label = None
-
                 i = random.randint(0, len(deck) - 1)
                 self.dealer_hand.append(deck[i])
                 deck.pop(i)
@@ -183,6 +205,7 @@ class Player:
             self.outcome_label.place(x=245, y = 200)
         self.bet = 0
         self.wager_label.config(text = "Bet: $" + str(self.bet))
+
 
     def hit(self, deck, sound, on_deal):
         if self.outcome == "unknown":
@@ -202,16 +225,6 @@ class Player:
                     self.outcome_label.place(x=245, y = 200)
                     self.bet = 0
                     self.wager_label.config(text = "Bet: $" + str(self.bet))
-                    #time.sleep(.2)
-                    #play_sound("SOUNDS/lose_horn.mp3")  
-                '''
-                if on_deal == False and self.score(self.hand) == "BlackJack!":
-                    time.sleep(1)
-                    self.dealer_play(deck, root)
-                    self.outcome_label = tk.Label(text=self.determine_winner())
-                    self.outcome_label.place(x=150, y = 200)'
-                '''
-                
 
     def deal(self, deck):
         self.hit(deck, False, True)
@@ -220,6 +233,7 @@ class Player:
 
     def increase_bet(self, amount):
         if (self.bet + amount) <= self.balance:
+            play_sound("SOUNDS/money_click.mp3")
             self.bet += amount
             self.wager_label.config(text = "Bet: $" + str(self.bet))
 
@@ -244,11 +258,7 @@ class Player:
         one_button.place(x = 490, y = 350)
 
 
-
-
-    
     def play_hand(self, wager):
-        green = "#007A33" #casino green color
         if self.first_run == True: #initial case
             self.first_run = False
             clear_menu()
@@ -262,8 +272,6 @@ class Player:
             stay_button.place(x=125, y=450)
             self.balance_label = tk.Label(text = "Balance: $" + str(self.balance))
             self.balance_label.place(x = 180, y = 450)
-            #wager_textbox = tk.Entry(root, width=5)
-            #wager_textbox.place(x = 250, y = 450)
         elif wager != 0:
             clear_menu()
             self.outcome = "unknown"
@@ -277,17 +285,12 @@ class Player:
             self.score_label.place(x=50, y=360)
             self.dealer_score_label = tk.Label(root, text="Score: " + str(self.score(self.dealer_hand)))
             self.dealer_score_label.place(x=50, y=135)
-            #self.wager_textbox = tk.Entry(root, width=5)
-            #self.wager_textbox.place(x = 225, y = 450)
-            
             root.title("BlackJack!")
             root.geometry("600x500")
             root.configure(bg="#007A33")
             deck = create_deck()
-
             self.deal(deck)
             self.init_dealer(deck)
-
             play_button = tk.Button(text="Play", command=lambda: self.play_hand(self.bet))
             play_button.place(x=25, y=450)
             hit_button = tk.Button(text="Hit", command=lambda: self.hit(deck, True, False))
@@ -296,8 +299,6 @@ class Player:
             stay_button.place(x=125, y=450)
             self.balance_label = tk.Label(text = "Balance: $" + str(self.balance))
             self.balance_label.place(x = 180, y = 450)
-            #wager_textbox = tk.Entry(root, width=5)
-            #wager_textbox.place(x = 250, y = 450)
 
 def create_deck():
     suits = ["c", "d", "h", "s"]
