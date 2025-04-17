@@ -46,6 +46,7 @@ class Player:
         self.wager_label = None
         self.first_run = True
         self.can_bet = True
+        self.hit_count = 0
 
     def score(self, given_hand):
         score = 0
@@ -213,6 +214,7 @@ class Player:
     def hit(self, deck, sound, on_deal):
         if self.outcome == "unknown":
             if self.score(self.hand) != "Bust!" and self.score(self.hand) != "BlackJack!":
+                self.hit_count += 1
                 i = random.randint(0, len(deck) - 1)
                 self.hand.append(deck[i])
                 deck.pop(i)
@@ -228,6 +230,10 @@ class Player:
                     self.outcome_label.place(x=245, y = 200)
                     self.bet = 0
                     self.wager_label.config(text = "Bet: $" + str(self.bet))
+                if self.score(self.hand) == "BlackJack!":
+                    #time.sleep(1)
+                    #self.dealer_play(deck, root)
+                    root.after(500, self.dealer_play, deck, root)
 
     def deal(self, deck):
         self.hit(deck, False, True)
@@ -235,7 +241,7 @@ class Player:
         play_sound("SOUNDS/hit.mp3")
 
     def increase_bet(self, amount):
-        if (amount == -1) and (self.can_bet == True):
+        if (amount == -1) and (self.can_bet == True): #case clear
             self.bet = 0
             self.wager_label.config(text = "Bet: $" + str(self.bet))
         elif ((self.bet + amount) <= self.balance) and (self.can_bet == True):
@@ -266,6 +272,7 @@ class Player:
         clear_bet_button.place(x=180, y = 470)
 
 
+
     def play_hand(self, wager):
         if self.first_run == True: #initial case
             self.first_run = False
@@ -282,6 +289,7 @@ class Player:
             self.balance_label.place(x = 180, y = 450)
         elif wager != 0:
             clear_menu()
+            self.hit_count = 0
             self.can_bet = FALSE
             self.outcome = "unknown"
             self.place_bets()
