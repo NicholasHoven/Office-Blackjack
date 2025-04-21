@@ -9,8 +9,6 @@ root = tk.Tk()
 pygame.mixer.init()
 green = "#007A33" #casino colors
 
-    
-
 def play_sound(sound_file):
     try:
         sound_path = os.path.abspath(sound_file)
@@ -47,6 +45,7 @@ class Player:
         self.first_run = True
         self.can_bet = True
         self.hit_count = 0
+        self.play_Status = "not started"
 
     def score(self, given_hand):
         score = 0
@@ -112,11 +111,14 @@ class Player:
         self.wager_label = None
         self.first_run = True
         self.can_bet = True
+        self.play_Status = "not started"
         self.play_hand(self.bet)
+
     
     
     def determine_winner(self):
         self.can_bet = True
+        self.play_Status = "not started"
         if self.score(self.hand) == "Bust!":
             self.balance -= self.bet
             self.balance_label.config(text = "Balance: $" + str(self.balance))
@@ -275,6 +277,7 @@ class Player:
 
     def play_hand(self, wager):
         if self.first_run == True: #initial case
+            #self.play_Status = "in progress"
             self.first_run = False
             clear_menu()
             self.outcome = "unknown"
@@ -288,34 +291,36 @@ class Player:
             self.balance_label = tk.Label(text = "Balance: $" + str(self.balance))
             self.balance_label.place(x = 180, y = 450)
         elif wager != 0:
-            clear_menu()
-            self.hit_count = 0
-            self.can_bet = FALSE
-            self.outcome = "unknown"
-            self.place_bets()
-            self.hand.clear()
-            self.dealer_hand.clear()
-            self.outcome_label = "undetermined"
-            self.bet = int(wager)
-            print("BET: "+ str(self.bet))
-            self.score_label = tk.Label(root, text="Score: " + str(self.score(self.hand))) #create label here and set player score.
-            self.score_label.place(x=50, y=360)
-            self.dealer_score_label = tk.Label(root, text="Score: " + str(self.score(self.dealer_hand)))
-            self.dealer_score_label.place(x=50, y=135)
-            root.title("BlackJack!")
-            root.geometry("568x500")
-            root.configure(bg="#007A33")
-            deck = create_deck()
-            self.deal(deck)
-            self.init_dealer(deck)
-            play_button = tk.Button(text="Play", command=lambda: self.play_hand(self.bet))
-            play_button.place(x=25, y=450)
-            hit_button = tk.Button(text="Hit", command=lambda: self.hit(deck, True, False))
-            hit_button.place(x=75, y=450)
-            stay_button = tk.Button(text="Stay", command=lambda: self.dealer_play(deck, root))
-            stay_button.place(x=125, y=450)
-            self.balance_label = tk.Label(text = "Balance: $" + str(self.balance))
-            self.balance_label.place(x = 180, y = 450)
+            if self.play_Status != "in progress":
+                self.play_Status = "in progress"
+                clear_menu()
+                self.hit_count = 0
+                self.can_bet = FALSE
+                self.outcome = "unknown"
+                self.place_bets()
+                self.hand.clear()
+                self.dealer_hand.clear()
+                self.outcome_label = "undetermined"
+                self.bet = int(wager)
+                print("BET: "+ str(self.bet))
+                self.score_label = tk.Label(root, text="Score: " + str(self.score(self.hand))) #create label here and set player score.
+                self.score_label.place(x=50, y=360)
+                self.dealer_score_label = tk.Label(root, text="Score: " + str(self.score(self.dealer_hand)))
+                self.dealer_score_label.place(x=50, y=135)
+                root.title("BlackJack!")
+                root.geometry("568x500")
+                root.configure(bg="#007A33")
+                deck = create_deck()
+                self.deal(deck)
+                self.init_dealer(deck)
+                play_button = tk.Button(text="Play", command=lambda: self.play_hand(self.bet))
+                play_button.place(x=25, y=450)
+                hit_button = tk.Button(text="Hit", command=lambda: self.hit(deck, True, False))
+                hit_button.place(x=75, y=450)
+                stay_button = tk.Button(text="Stay", command=lambda: self.dealer_play(deck, root))
+                stay_button.place(x=125, y=450)
+                self.balance_label = tk.Label(text = "Balance: $" + str(self.balance))
+                self.balance_label.place(x = 180, y = 450)
 
 def create_deck():
     suits = ["c", "d", "h", "s"]
