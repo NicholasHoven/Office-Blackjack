@@ -46,6 +46,7 @@ class Player:
         self.can_bet = True
         self.hit_count = 0
         self.play_Status = "not started"
+        self.stay_staus = "not started"
 
     def score(self, given_hand):
         score = 0
@@ -112,6 +113,7 @@ class Player:
         self.first_run = True
         self.can_bet = True
         self.play_Status = "not started"
+        self.stay_staus = "not started"
         self.play_hand(self.bet)
 
     
@@ -124,7 +126,7 @@ class Player:
             self.balance_label.config(text = "Balance: $" + str(self.balance))
             root.update()
             time.sleep(.3)
-            if self.balance == 0:
+            if self.balance < 10:
                 play_sound("SOUNDS/lose_horn.mp3")
                 play_again_button = tk.Button(text = "Play Again?", command=lambda: self.play_again())
                 play_again_button.place(x=450, y = 200)
@@ -192,23 +194,25 @@ class Player:
 
     def dealer_play(self, deck, root):
         if self.outcome_label == "undetermined":
-            while self.should_dealer_hit():
-                time.sleep(.5)
-                play_sound("SOUNDS/hit.mp3")
-                if hasattr(self, 'back_label') and self.back_label:
-                    self.back_label.destroy()
-                    self.back_label = None
-                i = random.randint(0, len(deck) - 1)
-                self.dealer_hand.append(deck[i])
-                deck.pop(i)
-                img = tk.PhotoImage(file="DECK/" + self.dealer_hand[-1].name())
-                label = tk.Label(root, image=img)
-                label.image = img
-                label.place(x=(len(self.dealer_hand)) * 25, y=25)
-                self.dealer_score_label.config(text="Score: " + str(self.score(self.dealer_hand)))
-                root.update()
-            self.outcome_label = tk.Label(text=self.determine_winner())
-            self.outcome_label.place(x=245, y = 200)
+            if self.stay_staus == "not started":
+                self.stay_staus = "started"
+                while self.should_dealer_hit():
+                    time.sleep(.5)
+                    play_sound("SOUNDS/hit.mp3")
+                    if hasattr(self, 'back_label') and self.back_label:
+                        self.back_label.destroy()
+                        self.back_label = None
+                    i = random.randint(0, len(deck) - 1)
+                    self.dealer_hand.append(deck[i])
+                    deck.pop(i)
+                    img = tk.PhotoImage(file="DECK/" + self.dealer_hand[-1].name())
+                    label = tk.Label(root, image=img)
+                    label.image = img
+                    label.place(x=(len(self.dealer_hand)) * 25, y=25)
+                    self.dealer_score_label.config(text="Score: " + str(self.score(self.dealer_hand)))
+                    root.update()
+                self.outcome_label = tk.Label(text=self.determine_winner())
+                self.outcome_label.place(x=245, y = 200)
         self.bet = 0
         self.wager_label.config(text = "Bet: $" + str(self.bet))
 
@@ -277,7 +281,6 @@ class Player:
 
     def play_hand(self, wager):
         if self.first_run == True: #initial case
-            #self.play_Status = "in progress"
             self.first_run = False
             clear_menu()
             self.outcome = "unknown"
@@ -293,6 +296,7 @@ class Player:
         elif wager != 0:
             if self.play_Status != "in progress":
                 self.play_Status = "in progress"
+                self.stay_staus = "not started"
                 clear_menu()
                 self.hit_count = 0
                 self.can_bet = FALSE
