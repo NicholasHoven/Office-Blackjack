@@ -4,7 +4,7 @@ from blackjack import *
 
 def display_main_menu():
     clear_menu()
-    root.title("BlackJack!")
+    root.title("Blackjack!")
     root.geometry("568x500")
     root.configure(bg="#007A33")
     nick = Player()

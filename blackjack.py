@@ -51,13 +51,13 @@ class Player:
                 score += 10
 
         if score == 21:
-            return "BlackJack!"
+            return "Blackjack!"
         elif score > 21:
             for card in given_hand:
                 if card.rank == 1:
                     score -= 10
                     if score == 21:
-                        return "BlackJack!"
+                        return "Blackjack!"
                     if score < 21:
                         return score
             if score > 21:
@@ -81,7 +81,7 @@ class Player:
         self.dealer_score_label.config(text="Score: " + str(self.score(self.dealer_hand)))
 
     def should_dealer_hit(self):
-        if self.score(self.dealer_hand) == "BlackJack!":
+        if self.score(self.dealer_hand) == "Blackjack!":
             return False
         if self.score(self.dealer_hand) == "Bust!":
             return False
@@ -126,7 +126,7 @@ class Player:
                 play_sound("SOUNDS/dealer_win.mp3")
                 self.outcome = "Dealer Wins!"
             return "Dealer Wins!"
-        elif self.score(self.hand) == "BlackJack!" and self.score(self.dealer_hand) != "BlackJack!":
+        elif self.score(self.hand) == "Blackjack!" and self.score(self.dealer_hand) != "Blackjack!":
             self.balance += (1.5 * self.bet)
             self.balance_label.config(text = "Balance: $" + str(self.balance))
             root.update()
@@ -134,7 +134,7 @@ class Player:
             play_sound("SOUNDS/win_sound.mp3")
             self.outcome = "You Win!"
             return "You Win!"
-        elif self.score(self.dealer_hand) == "BlackJack!" and self.score(self.hand) != "BlackJack!":
+        elif self.score(self.dealer_hand) == "Blackjack!" and self.score(self.hand) != "Blackjack!":
             self.balance -= self.bet
             self.balance_label.config(text = "Balance: $" + str(self.balance))
             root.update()
@@ -210,7 +210,7 @@ class Player:
 
     def hit(self, deck, sound, on_deal):
         if self.outcome == "unknown":
-            if self.score(self.hand) != "Bust!" and self.score(self.hand) != "BlackJack!":
+            if self.score(self.hand) != "Bust!" and self.score(self.hand) != "Blackjack!":
                 self.hit_count += 1
                 i = random.randint(0, len(deck) - 1)
                 self.hand.append(deck[i])
@@ -227,7 +227,7 @@ class Player:
                     self.outcome_label.place(x=245, y = 200)
                     self.bet = 0
                     self.wager_label.config(text = "Bet: $" + str(self.bet))
-                if self.score(self.hand) == "BlackJack!":
+                if self.score(self.hand) == "Blackjack!":
                     #time.sleep(1)
                     #self.dealer_play(deck, root)
                     root.after(500, self.dealer_play, deck, root)
@@ -302,7 +302,7 @@ class Player:
                 self.score_label.place(x=50, y=360)
                 self.dealer_score_label = tk.Label(root, text="Score: " + str(self.score(self.dealer_hand)))
                 self.dealer_score_label.place(x=50, y=135)
-                root.title("BlackJack!")
+                root.title("Blackjack!")
                 root.geometry("568x500")
                 root.configure(bg="#007A33")
                 deck = create_deck()
