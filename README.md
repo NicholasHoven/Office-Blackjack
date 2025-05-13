@@ -7,6 +7,8 @@ Welcome to Office Blackjack!, the thrilling card game where you can take a break
 ## How to Play
 
 The rules of Office Blackjack! are the same as traditional Blackjack:
+![game_demo](https://github.com/user-attachments/assets/e197b0e4-36f5-43ea-8e1f-e6ebdbb1c5a4)
+
 
 1.  **Place Your Bet:** Before each hand, you'll place a wager from your starting balance.
 2.  **The Deal:** You and the dealer will each receive two cards. One of the dealer's cards will be face down.
@@ -33,6 +35,3 @@ The game features a simple and intuitive interface:
 * **Betting Area:** Use the virtual chips to place your bet before each round.
 * **Action Buttons:** "Hit" to take another card, "Stand" to end your turn, and "Play" to start a new round after placing your bet.
 * **Balance:** Your current in-game currency will be displayed.
-
-## Screenshot
-ASSETS/game_demo.jpg
