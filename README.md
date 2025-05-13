@@ -4,11 +4,7 @@
 
 Welcome to Office Blackjack!, the thrilling card game where you can take a break from the daily grind and try your luck against the dealer. This classic game of 21 is now set in a familiar office environment. Place your bets, hit or stand, and aim for that perfect Blackjack! to beat the house.
 
-## How to Play
-
-The rules of Office Blackjack! are the same as traditional Blackjack:
 ![game_demo](https://github.com/user-attachments/assets/e197b0e4-36f5-43ea-8e1f-e6ebdbb1c5a4)
-
 
 1.  **Place Your Bet:** Before each hand, you'll place a wager from your starting balance.
 2.  **The Deal:** You and the dealer will each receive two cards. One of the dealer's cards will be face down.
