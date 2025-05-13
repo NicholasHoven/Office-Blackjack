@@ -1,6 +1,7 @@
-# Office Blackjack!
+# Office Blackjack! ![image](https://github.com/user-attachments/assets/bdfa9e7d-dac8-4f2f-a8e4-2cc80a4223d7)
 
-Welcome to Office Blackjack!, the definitive blackjack experience on GitHub! I built Office BlackJack simply as a challenge to myself. I had used Python Tkinter frequency in my work to make simplistic applications for my team. After doing that for a few months I decided that I and wanted to try to push the library to its absolute limits. Thus the idea for a full stack video game was born!
+
+Welcome to Office Blackjack!, the definitive blackjack experience on GitHub! I built Office BlackJack simply as a challenge to myself. I had used Python Tkinter frequency in my work to make simplistic applications for my team. After doing that for a few months I decided that I wanted to try to push Tkinter to its limits. I decided to make a full stack video game complete with unique animations, assets, and sound effects, and thus Office Blackjack was born.
 
 ![game_demo](https://github.com/user-attachments/assets/e197b0e4-36f5-43ea-8e1f-e6ebdbb1c5a4)
 
