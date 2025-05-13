@@ -1,8 +1,6 @@
 # Office Blackjack!
 
-## Overview
-
-Welcome to Office Blackjack!, the thrilling card game where you can take a break from the daily grind and try your luck against the dealer. This classic game of 21 is now set in a familiar office environment. Place your bets, hit or stand, and aim for that perfect Blackjack! to beat the house.
+Welcome to Office Blackjack!, the definitive blackjack experience on GitHub! I built Office BlackJack simply as a challenge to myself. I had used Python Tkinter frequency in my work to make simplistic applications for my team. After doing that for a few months I decided that I and wanted to try to push the library to its absolute limits. Thus the idea for a full stack video game was born!
 
 ![game_demo](https://github.com/user-attachments/assets/e197b0e4-36f5-43ea-8e1f-e6ebdbb1c5a4)
 
