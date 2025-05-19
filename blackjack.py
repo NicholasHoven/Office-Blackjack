@@ -248,7 +248,7 @@ class Player:
 
     def place_bets(self):
         self.wager_label = tk.Label(text = "Bet: $" + str(self.bet))
-        self.wager_label.place(x = 180, y = 425)
+        self.wager_label.place(x = 180, y = 420)
         one_img_v = tk.PhotoImage(file="CURRENCY/100_135v.png")
         one_button = tk.Button(root, image=one_img_v, borderwidth=0, command=lambda: self.increase_bet(100))
         one_button.image = one_img_v
@@ -283,7 +283,7 @@ class Player:
             stay_button = tk.Button(text="Stay", command=lambda: self.dealer_play(deck, root))
             stay_button.place(x=125, y=450)
             self.balance_label = tk.Label(text = "Balance: $" + str(self.balance))
-            self.balance_label.place(x = 180, y = 450)
+            self.balance_label.place(x = 180, y = 445)
         elif wager != 0:
             if self.play_Status != "in progress":
                 self.play_Status = "in progress"
@@ -315,4 +315,4 @@ class Player:
                 stay_button = tk.Button(text="Stay", command=lambda: self.dealer_play(deck, root))
                 stay_button.place(x=125, y=450)
                 self.balance_label = tk.Label(text = "Balance: $" + str(self.balance))
-                self.balance_label.place(x = 180, y = 450)
+                self.balance_label.place(x = 180, y = 445)
