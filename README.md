@@ -8,7 +8,7 @@ Welcome to Office Blackjack!, the definitive blackjack experience on GitHub! I b
 **The game comes with several innovative features:**
 
 * A fully functional Blackjack game built with Python Tkinter.
-* Custom-designed card assets and visually appealing interface.
+* Free and Orignal Assets.
 * Sound effects to enhance the gaming experience.
 * Automatic installation of required libraries via a `.bat` configuration file.
 
