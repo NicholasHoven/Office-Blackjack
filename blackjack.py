@@ -3,6 +3,7 @@ import random
 import time
 from utils import *
 
+
 class Card:
     def __init__(self, rank, suit):
         self.rank = rank
@@ -12,6 +13,7 @@ class Card:
         name = str(self.rank) + str(self.suit) + ".gif"
         return name
     
+
 def create_deck():
     suits = ["c", "d", "h", "s"]
     deck = []
@@ -19,6 +21,7 @@ def create_deck():
         for s in suits:
             deck.append(Card(r, s))
     return deck
+
 
 class Player:
     def __init__(self):
@@ -40,6 +43,7 @@ class Player:
         self.play_Status = "not started"
         self.stay_staus = "not started"
 
+
     def score(self, given_hand):
         score = 0
         for card in given_hand:
@@ -49,7 +53,6 @@ class Player:
                 score += card.rank
             elif card.rank >= 10:
                 score += 10
-
         if score == 21:
             return "Blackjack!"
         elif score > 21:
@@ -80,6 +83,7 @@ class Player:
         self.back_label.place(x=50, y=24)
         self.dealer_score_label.config(text="Score: " + str(self.score(self.dealer_hand)))
 
+
     def should_dealer_hit(self):
         if self.score(self.dealer_hand) == "Blackjack!":
             return False
@@ -88,6 +92,7 @@ class Player:
         if isinstance(self.score(self.dealer_hand), int) and self.score(self.dealer_hand) < 17:
             return True
         return False
+    
     
     def play_again(self):
         self.hand = []
@@ -228,14 +233,14 @@ class Player:
                     self.bet = 0
                     self.wager_label.config(text = "Bet: $" + str(self.bet))
                 if self.score(self.hand) == "Blackjack!":
-                    #time.sleep(1)
-                    #self.dealer_play(deck, root)
                     root.after(500, self.dealer_play, deck, root)
+
 
     def deal(self, deck):
         self.hit(deck, False, True)
         self.hit(deck, False, True)
         play_sound("SOUNDS/hit.mp3")
+
 
     def increase_bet(self, amount):
         if (amount == -1) and (self.can_bet == True): #case clear
@@ -245,6 +250,7 @@ class Player:
             play_sound("SOUNDS/money_click.mp3")
             self.bet += amount
             self.wager_label.config(text = "Bet: $" + str(self.bet))
+
 
     def place_bets(self):
         self.wager_label = tk.Label(text = "Bet: $" + str(self.bet))
@@ -267,7 +273,6 @@ class Player:
         one_button.place(x = 490, y = 350)
         clear_bet_button = tk.Button(root, text="Clear", command=lambda: self.increase_bet(-1))
         clear_bet_button.place(x=180, y = 470)
-
 
 
     def play_hand(self, wager):

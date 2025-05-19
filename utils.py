@@ -7,6 +7,7 @@ root = tk.Tk()
 pygame.mixer.init()
 green = "#007A33" #casino colors
 
+
 def play_sound(sound_file):
     try:
         sound_path = os.path.abspath(sound_file)
