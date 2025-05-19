@@ -15,5 +15,3 @@ def display_main_menu():
 def run_gui():
     display_main_menu()
     root.mainloop()
-
-run_gui()
