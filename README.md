@@ -19,13 +19,12 @@ Welcome to Office Blackjack!, the definitive blackjack experience on GitHub! I b
 * **Staying:** If you are satisfied with your hand's total value and do not want any more cards, you can choose to "stay." Once you stay, it's the dealer's turn to play.
 * **New Game (Out of Money):** If your balance reaches zero, the game will automatically prompt you to start a new game, resetting your funds to the initial amount.
 
-**Running the Configuration File:**
+**Setup and Configuration:**
 
-The `config.bat` file is designed to automatically install all the necessary Python libraries for Office Blackjack to run correctly. To execute it:
+* The game is created using the Python3 standard library, but Pygame will need to be installed.
+* For Windows and Linux, simply pip install pygame in the command console.
+* Then run the game using the included .bat runner file.
 
-1.  Navigate to the directory where you have saved the `config.bat` file in your file explorer.
-2.  Double-click the `config.bat` file.
-3.  A command prompt window will appear, and the script will begin installing the required Python libraries (such as Tkinter, if needed, and any other dependencies).
-4.  Wait for the script to finish. Once it's complete, you can close the command prompt window and run the main game file.
+
 
 
