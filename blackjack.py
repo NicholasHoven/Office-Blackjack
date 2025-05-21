@@ -125,7 +125,7 @@ class Player:
             if self.balance < 10:
                 play_sound("SOUNDS/lose_horn.mp3")
                 play_again_button = tk.Button(text = "Play Again?", command=lambda: self.play_again())
-                play_again_button.place(x=435, y = 200)
+                play_again_button.place(x=425, y = 200)
                 return "The House Always Wins!"
             else:
                 play_sound("SOUNDS/dealer_win.mp3")
