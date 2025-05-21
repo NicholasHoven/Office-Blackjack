@@ -3,14 +3,14 @@
 
 Welcome to Office Blackjack!, the definitive blackjack experience on GitHub! I built Office BlackJack simply as a challenge to myself. I had used Python Tkinter frequency in my work to make simplistic applications for my team. After doing that for a few months I decided that I wanted to try to push Tkinter to its limits. I opted to make a full stack video game complete with unique animations, assets, and sound effects, and thus Office Blackjack was born.
 
-![game_demo](https://github.com/user-attachments/assets/e197b0e4-36f5-43ea-8e1f-e6ebdbb1c5a4)
+![image](https://github.com/user-attachments/assets/c77af6a4-5509-4b17-89b6-f4a32306fc0c)
 
 **The game comes with several innovative features:**
 
 * A fully functional Blackjack game built with Python Tkinter.
 * Free and Orignal Assets.
 * Sound effects to enhance the gaming experience.
-* Automatic installation of required libraries via a `.bat` configuration file.
+* Unique art and animations.
 
 **Basic Gameplay Features:**
 
