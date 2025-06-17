@@ -42,6 +42,7 @@ class Player:
         self.hit_count = 0
         self.play_Status = "not started"
         self.stay_staus = "not started"
+        self.play_again_status = False
 
 
     def score(self, given_hand):
@@ -111,6 +112,7 @@ class Player:
         self.can_bet = True
         self.play_Status = "not started"
         self.stay_staus = "not started"
+        self.play_again_status = True
         self.play_hand(self.bet)
 
     
@@ -274,11 +276,20 @@ class Player:
         clear_bet_button = tk.Button(root, text="Clear", command=lambda: self.increase_bet(-1))
         clear_bet_button.place(x=180, y = 470)
 
+    def play_music(self):
+        music_image = tk.PhotoImage(file="ASSETS/music_label.png")
+        sound_button = tk.Button(root, image=music_image, borderwidth=0, bg="#007A33", command=lambda: toggle_music("SOUNDS/game_music.mp3"))
+        sound_button.image = music_image
+        sound_button.place(x = 538, y = 2)
+
 
     def play_hand(self, wager):
         if self.first_run == True: #initial case
+            if self.play_again_status == False:
+                toggle_music("SOUNDS/game_music.mp3")
             self.first_run = False
             clear_menu()
+            self.play_music()
             self.outcome = "unknown"
             self.place_bets()
             play_button = tk.Button(text="Play", command=lambda: self.play_hand(self.bet))
@@ -294,6 +305,7 @@ class Player:
                 self.play_Status = "in progress"
                 self.stay_staus = "not started"
                 clear_menu()
+                self.play_music()
                 self.hit_count = 0
                 self.can_bet = False
                 self.outcome = "unknown"
