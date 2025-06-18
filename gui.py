@@ -10,6 +10,7 @@ def display_main_menu():
     root.configure(bg="#007A33")
     nick = Player()
     play_button = tk.Button(text="Play!", command=lambda: nick.play_hand(nick.bet))
+    root.resizable(False, False)
     play_button.place(x=250, y=250)
     
 
