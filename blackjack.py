@@ -211,8 +211,8 @@ class Player:
                     root.update()
                 self.outcome_label = tk.Label(text=self.determine_winner())
                 self.outcome_label.place(x=245, y = 200)
-        self.bet = 0
-        self.wager_label.config(text = "Bet: $" + str(self.bet))
+            self.bet = 0
+            self.wager_label.config(text = "Bet: $" + str(self.bet))
 
 
     def hit(self, deck, sound, on_deal):
