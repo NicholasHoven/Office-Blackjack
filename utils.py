@@ -28,7 +28,7 @@ def toggle_music(sound_file):
     else:
         try:
             pygame.mixer.music.load(sound_file)
-            pygame.mixer.music.set_volume(0.15)
+            pygame.mixer.music.set_volume(0.75)
             pygame.mixer.music.play(-1) # Play indefinitely
             print(f"Playing: {os.path.basename(sound_file)}")
         except pygame.error as e:
